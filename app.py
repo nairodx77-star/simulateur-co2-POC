@@ -225,15 +225,16 @@ c1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
 c2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
 c3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
 
-# Mini-graphe compact aligné à gauche
+# Mini-graphe aligné à gauche (compact mais lisible)
 df_chart = pd.DataFrame({
     "Phase": ["Avant", "Après"],
     "tCO₂/an": [emissions_avant, emissions_apres]
 }).set_index("Phase")
 
-col_graph, col_blank = st.columns([1, 3])  # 1/2 largeur pour le graphe
+col_graph, col_blank = st.columns([1, 3])  # 1/4 largeur pour le graphe
 with col_graph:
-    st.bar_chart(df_chart, height=40)  # ultra-compact, smartphone-style
+    st.bar_chart(df_chart, height=120)  # hauteur augmentée pour lisibilité
+
 
 # ==============================
 # Export CSV

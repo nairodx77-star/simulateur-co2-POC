@@ -1,150 +1,325 @@
 import streamlit as st
 import pandas as pd
+import json
+from io import StringIO
 
 # ==============================
-# CONFIG
+# CONFIG / THEME
 # ==============================
 st.set_page_config(page_title="Simulateur GRDF CO₂", layout="wide")
+GRDF_BLUE = "#004595"
+GRDF_TEAL = "#06A8A5"
+GRDF_GREEN = "#71A950"
+GRDF_YELLOW = "#F5A803"
+GRDF_GREY = "#87929A"
+
+st.markdown(f"""
+<style>
+    .block-container {{ padding-top: 1rem; }}
+    h1, h2, h3, h4 {{
+        color: {GRDF_BLUE} !important;
+    }}
+    .stMetric > div > div > div {{
+        color: {GRDF_BLUE};
+    }}
+    .grdf-badge {{
+        background: {GRDF_TEAL};
+        color: white;
+        padding: .3rem .6rem;
+        border-radius: .5rem;
+        font-weight: 600;
+        display:inline-block;
+        margin-bottom:.5rem;
+    }}
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🔵 Simulateur Gains CO₂ – GRDF")
+st.caption("Version sans Excel – matrices et facteurs intégrés (éditables en ligne)")
 
 # ==============================
-# CHARGEMENT DES DONNÉES EXCEL
+# FACTEURS D'ÉMISSION (éditables)
 # ==============================
-@st.cache_data
-def load_data():
-    xls = pd.ExcelFile("Référentiel données décarbonation GRDF.xlsx")
-    perf = pd.read_excel(xls, "1.2 bis Perf relatives PCS", header=None)
-    factors = pd.read_excel(xls, "D.1. Facteur d'émissions", header=None)
-    return perf, factors
-
-perf, factors = load_data()
+DEFAULT_FACTORS = {
+    "FE_GAZ": 0.239,      # tCO2/MWh (Gaz naturel PCI)
+    "FE_ELEC": 0.058,     # tCO2/MWh (Mix élec France)
+    "FE_BIOMETH": 0.0417  # tCO2/MWh (Biométhane)
+}
 
 # ==============================
-# EXTRACTION MATRICES
+# MATRICES CAS MOYENS (auto-gain)
+# Remarque IMPORTANTE :
+# - Les valeurs ci-dessous sont fournies à titre de SQUELETTE INITIAL.
+# - Elles reproduisent la structure (bâtiment -> solution AVANT -> solution APRÈS -> % gain).
+# - Par souci de robustesse, vous pouvez les ajuster à tout moment via le mode "Admin" (JSON).
+# - Si une combinaison est marquée "NS" ou absente, le gain auto = 0 (surcharge utilisateur possible).
 # ==============================
-def extract_matrix(start_row, label):
-    """Extrait une matrice de performances relatives pour un type de bâtiment"""
-    block = perf.iloc[start_row-5:start_row+50, :].reset_index(drop=True)
 
-    # Chercher la ligne "Solution posée" partout
-    row_pose_candidates = block.applymap(lambda x: isinstance(x, str) and "Solution posée" in x)
-    coords = list(zip(*row_pose_candidates.values.nonzero()))
+DEFAULT_MATRICES = {
+    "Maison individuelle": {
+        "Chaudière gaz standard >15 ans": {
+            "Chaudière gaz THPE": -0.25,
+            "PAC A/E + THPE (hybride)": -0.36,
+            "PAC A/A + THPE": -0.32,
+            "PAC gaz": -0.29,
+            "PAC géothermique + THPE": -0.47,
+            "Chaudière bois + THPE": -0.29
+        },
+        "Chaudière gaz standard neuve": {
+            "Chaudière gaz THPE": -0.22,
+            "PAC A/E + THPE (hybride)": -0.31,
+            "PAC A/A + THPE": -0.28,
+            "PAC gaz": -0.25,
+            "PAC géothermique + THPE": -0.44
+        },
+        "Chaudière gaz THPE": {
+            "PAC A/E + THPE (hybride)": -0.23,
+            "PAC A/A + THPE": -0.20,
+            "PAC gaz": -0.18,
+            "PAC géothermique + THPE": -0.29
+        },
+        "PAC A/E + THPE (hybride)": {
+            "PAC A/A + THPE": -0.08,
+            "PAC gaz": -0.06,
+            "PAC géothermique + THPE": -0.12
+        },
+        "PAC A/A + THPE": {
+            "PAC gaz": "NS",
+            "PAC géothermique + THPE": -0.10
+        },
+        "PAC gaz": {
+            "PAC géothermique + THPE": -0.07
+        },
+        "PAC géothermique + THPE": {},
+        "Chaudière bois + THPE": {
+            "PAC A/E + THPE (hybride)": -0.09,
+            "PAC géothermique + THPE": -0.11
+        },
+        "Chaudière fioul >15 ans": {
+            "Chaudière gaz THPE": -0.30,
+            "PAC A/E + THPE (hybride)": -0.40,
+            "PAC A/A + THPE": -0.36,
+            "PAC géothermique + THPE": -0.53
+        },
+        "Chaudière fioul THPE": {
+            "Chaudière gaz THPE": -0.19,
+            "PAC A/E + THPE (hybride)": -0.28,
+            "PAC géothermique + THPE": -0.38
+        }
+    },
 
-    if not coords:
-        # fallback : chercher "Solution initiale"
-        row_init_candidates = block.applymap(lambda x: isinstance(x, str) and "Solution initiale" in x)
-        coords_init = list(zip(*row_init_candidates.values.nonzero()))
-        if coords_init:
-            row_pose = coords_init[0][0] + 2   # souvent 2 lignes plus bas
-        else:
-            return [], [], pd.DataFrame()
-    else:
-        row_pose = coords[0][0]
+    "Appartement chauffage indiv": {
+        "Chaudière gaz standard >15 ans": {
+            "Chaudière gaz THPE": -0.22,
+            "PAC A/E + THPE (hybride)": -0.34,
+            "PAC A/A + THPE": -0.28,
+            "PAC gaz": -0.25
+        },
+        "Chaudière gaz THPE": {
+            "PAC A/E + THPE (hybride)": -0.20,
+            "PAC A/A + THPE": -0.16
+        },
+        "PAC A/E + THPE (hybride)": {
+            "PAC A/A + THPE": -0.07
+        },
+        "Chaudière fioul >15 ans": {
+            "Chaudière gaz THPE": -0.27,
+            "PAC A/E + THPE (hybride)": -0.37,
+            "PAC A/A + THPE": -0.30
+        }
+    },
 
-    # Solutions initiales (col 3 sinon col 1)
-    sols_init = block.iloc[row_pose+2:, 3].dropna().tolist()
-    if not sols_init:
-        sols_init = block.iloc[row_pose+2:, 1].dropna().tolist()
+    "Appartement chauffage coll": {
+        "Chauffage collectif gaz (ancienne)": {
+            "Chaudière gaz THPE collective": -0.20,
+            "PAC sur boucle + THPE": -0.28,
+            "Réseau de chaleur": -0.18
+        },
+        "Chauffage collectif fioul": {
+            "Chaudière gaz THPE collective": -0.30,
+            "PAC sur boucle + THPE": -0.35,
+            "Réseau de chaleur": -0.27
+        },
+        "Chauffage urbain ancien": {
+            "Réseau de chaleur (mix décarboné)": -0.15,
+            "PAC sur boucle + THPE": -0.22
+        }
+    },
 
-    # Solutions posées = en-têtes juste après "Solution posée"
-    sols_pose = block.iloc[row_pose+1].dropna().tolist()
-    sols_pose = [s for s in sols_pose if isinstance(s, str)][1:]  # ignorer 1ère cellule vide
+    "Bâtiment tertiaire": {
+        "Chaudière gaz standard": {
+            "Chaudière gaz THPE": -0.18,
+            "PAC A/E + appoint gaz": -0.25,
+            "PAC eau/eau + appoint": -0.30,
+            "Réseau de chaleur": -0.15
+        },
+        "Chaudière fioul": {
+            "Chaudière gaz THPE": -0.28,
+            "PAC A/E + appoint gaz": -0.36,
+            "PAC eau/eau + appoint": -0.42,
+            "Réseau de chaleur": -0.25
+        },
+        "PAC A/E ancienne": {
+            "PAC A/E + appoint gaz (haute perf)": -0.12,
+            "PAC eau/eau + appoint": -0.18
+        },
+        "Réseau de chaleur ancien": {
+            "Réseau de chaleur (mix décarboné)": -0.12,
+            "PAC eau/eau + appoint": -0.20
+        }
+    }
+}
 
-    # Matrice
-    mat = block.iloc[row_pose+2:row_pose+2+len(sols_init), 4:4+len(sols_pose)]
-    mat.index = sols_init[:len(mat)]
-    mat.columns = sols_pose
-    return sols_init, sols_pose, mat
+# ==============================
+# STATE (matrices & facteurs éditables)
+# ==============================
+if "matrices" not in st.session_state:
+    st.session_state.matrices = DEFAULT_MATRICES
+if "factors" not in st.session_state:
+    st.session_state.factors = DEFAULT_FACTORS
 
-# Construire dictionnaire des bâtiments
-bat_matrices = {}
-for label, row in {
-    "Maison individuelle": 18,
-    "Appartement indiv": 45,
-    "Appartement coll": 62,
-    "Bâtiment tertiaire": 80
-}.items():
-    sols_init, sols_apres, mat = extract_matrix(row, label)
-    if sols_init and sols_apres and not mat.empty:
-        bat_matrices[label] = (sols_init, sols_apres, mat)
+# ==============================
+# MODE ADMIN (édition JSON inline)
+# ==============================
+with st.expander("⚙️ Admin – éditer matrices et facteurs (JSON)", expanded=False):
+    st.markdown('<span class="grdf-badge">Édition avancée</span>', unsafe_allow_html=True)
+    tab1, tab2, tab3 = st.tabs(["Matrices (JSON)", "Facteurs (JSON)", "Importer/Exporter"])
 
-# Vérifier qu’on a au moins un bâtiment valide
-if not bat_matrices:
-    st.error("⚠️ Impossible d’extraire les matrices depuis l’Excel. Vérifie la structure du fichier.")
+    with tab1:
+        matrices_json = st.text_area(
+            "Matrices (bâtiment → solution AVANT → solution APRÈS → % gain) :",
+            value=json.dumps(st.session_state.matrices, indent=2, ensure_ascii=False),
+            height=380
+        )
+        if st.button("💾 Enregistrer matrices JSON"):
+            try:
+                st.session_state.matrices = json.loads(matrices_json)
+                st.success("Matrices mises à jour.")
+            except Exception as e:
+                st.error(f"JSON invalide : {e}")
+
+    with tab2:
+        factors_json = st.text_area(
+            "Facteurs d’émission (tCO₂/MWh) :",
+            value=json.dumps(st.session_state.factors, indent=2, ensure_ascii=False),
+            height=200
+        )
+        if st.button("💾 Enregistrer facteurs JSON"):
+            try:
+                st.session_state.factors = json.loads(factors_json)
+                st.success("Facteurs mis à jour.")
+            except Exception as e:
+                st.error(f"JSON invalide : {e}")
+
+    with tab3:
+        colu1, colu2 = st.columns(2)
+        # Export
+        matrices_dl = json.dumps(st.session_state.matrices, indent=2, ensure_ascii=False)
+        factors_dl = json.dumps(st.session_state.factors, indent=2, ensure_ascii=False)
+        colu1.download_button("⬇️ Télécharger matrices.json", data=matrices_dl, file_name="matrices.json")
+        colu1.download_button("⬇️ Télécharger facteurs.json", data=factors_dl, file_name="facteurs.json")
+        # Import
+        up_m = colu2.file_uploader("Importer matrices.json", type=["json"], key="up_m")
+        up_f = colu2.file_uploader("Importer facteurs.json", type=["json"], key="up_f")
+        if up_m:
+            try:
+                st.session_state.matrices = json.load(up_m)
+                st.success("Matrices importées.")
+            except Exception as e:
+                st.error(f"Import matrices KO : {e}")
+        if up_f:
+            try:
+                st.session_state.factors = json.load(up_f)
+                st.success("Facteurs importés.")
+            except Exception as e:
+                st.error(f"Import facteurs KO : {e}")
+
+# ==============================
+# UI – Saisie
+# ==============================
+matrices = st.session_state.matrices
+factors = st.session_state.factors
+
+batiments = list(matrices.keys())
+if not batiments:
+    st.error("Aucun type de bâtiment disponible. Renseignez des matrices en mode Admin.")
     st.stop()
 
-# ==============================
-# EXTRACTION FACTEURS D'ÉMISSION
-# ==============================
-def get_factor(keyword, default):
-    mask = factors.applymap(lambda x: isinstance(x,str) and keyword.lower() in x.lower())
-    coords = list(zip(*mask.values.nonzero()))
-    if coords:
-        r = coords[0][0]
-        row_vals = factors.iloc[r].tolist()
-        for v in row_vals:
-            if isinstance(v,(int,float)):
-                return float(v)
-    return default
+bat = st.selectbox("Type de bâtiment", batiments)
+solutions_avant = list(matrices.get(bat, {}).keys())
+if not solutions_avant:
+    st.error("Aucune solution AVANT pour ce bâtiment. Complétez les matrices en Admin.")
+    st.stop()
 
-FE_GAZ = get_factor("Gaz naturel PCI", 0.239)
-FE_ELEC = get_factor("Electricité", 0.058)
-FE_BIOMETH = 0.0417
+sol_init = st.selectbox("Solution AVANT rénovation", solutions_avant)
+solutions_apres = list(matrices[bat].get(sol_init, {}).keys())
+if not solutions_apres:
+    st.warning("Aucune solution APRÈS pour ce couple. Choisissez une autre solution AVANT ou éditez les matrices.")
+    solutions_apres = ["— aucune —"]
+sol_final = st.selectbox("Solution APRÈS rénovation", solutions_apres)
 
-# ==============================
-# INTERFACE UTILISATEUR
-# ==============================
-bat = st.selectbox("Type de bâtiment", list(bat_matrices.keys()))
+colL, colR = st.columns(2)
+conso = colL.number_input("Consommation AVANT (kWh PCI/an)", min_value=1000, value=20000, step=500)
+gaz_vert = colR.slider("% de gaz vert (biométhane) au contrat", 0, 100, 0)
 
-sols_init, sols_apres, mat = bat_matrices[bat]
-sol_init = st.selectbox("Solution AVANT rénovation", sols_init)
-sol_final = st.selectbox("Solution APRÈS rénovation", sols_apres)
-
-conso = st.number_input("Consommation avant (kWh PCI/an)", min_value=1000, value=20000, step=500)
-gaz_vert = st.slider("% Gaz vert", 0, 100, 0)
-
-hybride = st.radio("Solution hybride ?", ["Non","Oui"])
+hybride = st.radio("Solution APRÈS hybride (répartition conso)", ["Non", "Oui"], index=0)
 if hybride == "Oui":
-    colh1, colh2 = st.columns(2)
-    part_elec = colh1.slider("Répartition électricité (%)", 0, 100, 50)
+    c1, c2 = st.columns(2)
+    part_elec = c1.slider("Répartition ÉLECTRICITÉ (%)", 0, 100, 50)
     part_gaz = 100 - part_elec
-    colh2.write(f"Répartition gaz : {part_gaz}%")
+    c2.write(f"Répartition GAZ : **{part_gaz}%**")
 else:
     part_elec, part_gaz = 0, 100
 
 # ==============================
-# CALCUL GAIN ÉNERGÉTIQUE
+# GAIN ÉNERGÉTIQUE – auto + surcharge
 # ==============================
-try:
-    gain_auto = mat.loc[sol_init, sol_final]
-    gain_auto = float(gain_auto) if isinstance(gain_auto,(int,float)) else 0
-except Exception:
-    gain_auto = 0
+def get_gain_auto(bat, sol_init, sol_final):
+    try:
+        val = matrices[bat][sol_init][sol_final]
+        if isinstance(val, (int, float)):
+            return float(val)
+        # valeurs comme "NS" → pas de valeur auto
+        return 0.0
+    except Exception:
+        return 0.0
 
-gain_user = st.number_input("Surcharge % gain (laisser 0 pour auto)", value=0.0)
-gain_ener = gain_user if gain_user != 0 else gain_auto
+gain_auto = get_gain_auto(bat, sol_init, sol_final)
+colga, colgs = st.columns(2)
+colga.info(f"Gain énergétique auto (cas moyen) : **{gain_auto:.3f}** (ex: -0.25 = -25%)")
+gain_user = colgs.number_input("Surcharge du % gain (laisser 0 pour auto)", value=0.0, step=0.01, format="%.3f")
+gain_ener = gain_user if abs(gain_user) > 1e-9 else gain_auto
 
 # ==============================
-# CALCULS CO2
+# CALCULS CO₂
 # ==============================
-conso_avant_mwh = conso/1000
-conso_apres_mwh = conso_avant_mwh * (1 + gain_ener)
+FE_GAZ = float(factors.get("FE_GAZ", DEFAULT_FACTORS["FE_GAZ"]))
+FE_ELEC = float(factors.get("FE_ELEC", DEFAULT_FACTORS["FE_ELEC"]))
+FE_BIOMETH = float(factors.get("FE_BIOMETH", DEFAULT_FACTORS["FE_BIOMETH"]))
 
-# Émissions avant (100% gaz naturel)
+conso_avant_mwh = conso / 1000.0
+conso_apres_mwh = conso_avant_mwh * (1.0 + gain_ener)
+
+# Émissions AVANT (100% gaz naturel)
 emissions_avant = conso_avant_mwh * FE_GAZ
 
-# Facteur gaz avec biométhane
-fe_gaz_mix = FE_GAZ*(1-gaz_vert/100) + FE_BIOMETH*(gaz_vert/100)
+# Facteur gaz APRÈS (mix gaz naturel + biométhane)
+fe_gaz_mix = FE_GAZ*(1.0 - gaz_vert/100.0) + FE_BIOMETH*(gaz_vert/100.0)
 
-# Émissions après
+def is_pac(solution_label: str) -> bool:
+    label = (solution_label or "").lower()
+    return ("pac" in label) or ("pompe" in label)
+
+# Émissions APRÈS
 if hybride == "Oui":
-    emissions_apres = (conso_apres_mwh * part_gaz/100) * fe_gaz_mix \
-                    + (conso_apres_mwh * part_elec/100) * FE_ELEC
+    # Pondération conso APRÈS
+    emis_elec = (conso_apres_mwh * (part_elec/100.0)) * FE_ELEC
+    emis_gaz  = (conso_apres_mwh * (part_gaz/100.0))  * fe_gaz_mix
+    emissions_apres = emis_elec + emis_gaz
 else:
-    # si PAC → tout à l’électricité
-    if "PAC" in sol_final:
+    if is_pac(sol_final):  # solution 100% PAC
         emissions_apres = conso_apres_mwh * FE_ELEC
-    else:
+    else:  # solution à gaz (avec % biométhane)
         emissions_apres = conso_apres_mwh * fe_gaz_mix
 
 gain_co2 = emissions_avant - emissions_apres
@@ -153,9 +328,43 @@ gain_co2 = emissions_avant - emissions_apres
 # AFFICHAGE RÉSULTATS
 # ==============================
 st.subheader("📊 Résultats")
-col1, col2, col3 = st.columns(3)
-col1.metric("Conso AVANT (MWh)", f"{conso_avant_mwh:.1f}")
-col2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
-col3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
+c1, c2, c3 = st.columns(3)
+c1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
+c2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
+c3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
+st.metric("✅ Gain CO₂ (tCO₂/an)", f"{gain_co2:.2f}")
 
-st.metric("✅ Gain CO₂ (t/an)", f"{gain_co2:.2f}")
+# Petit graphe comparatif
+import matplotlib.pyplot as plt
+fig1, ax1 = plt.subplots()
+ax1.bar(["Avant", "Après"], [emissions_avant, emissions_apres])
+ax1.set_ylabel("tCO₂/an")
+ax1.set_title("Émissions CO₂ – Avant vs Après")
+st.pyplot(fig1)
+
+# ==============================
+# EXPORT CSV
+# ==============================
+st.subheader("⬇️ Export des résultats")
+result = {
+    "Bâtiment": bat,
+    "Solution AVANT": sol_init,
+    "Solution APRÈS": sol_final,
+    "Consommation AVANT (kWh PCI/an)": conso,
+    "% Gaz vert": gaz_vert,
+    "Hybride": hybride,
+    "Part Elec (%)": part_elec,
+    "Part Gaz (%)": part_gaz,
+    "Gain énergétique utilisé": gain_ener,
+    "Conso AVANT (MWh/an)": conso_avant_mwh,
+    "Conso APRÈS (MWh/an)": conso_apres_mwh,
+    "Émissions AVANT (tCO2/an)": emissions_avant,
+    "Émissions APRÈS (tCO2/an)": emissions_apres,
+    "Gain CO2 (tCO2/an)": gain_co2
+}
+df_res = pd.DataFrame([result])
+csv_buf = StringIO()
+df_res.to_csv(csv_buf, index=False)
+st.download_button("Télécharger le CSV de la simulation", data=csv_buf.getvalue(), file_name="simulation_CO2.csv", mime="text/csv")
+
+st.caption("Palette GRDF appliquée – Bleu/Teal/Vert/Jaune/Gris. Les matrices et facteurs sont modifiables via l’onglet Admin.")

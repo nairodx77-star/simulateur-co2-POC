@@ -1,283 +1,222 @@
-"Appartement chauffage indiv": {
-  "Chaudière gaz standard de plus de 15 ans": {
-    "Chaudière gaz standard de plus de 15 ans": "N.S",
-    "Chaudière gaz standard neuve": -0.049964,
-    "Chaudière gaz THPE": -0.282655,
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": -0.328694,
-    "PAC gaz": "NA",
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
+{
+  "Maison individuelle": {
+    "Chaudière gaz standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.049964,
+      "Chaudière gaz THPE": -0.282655,
+      "PAC A/E + THPE (PAC hybride)": "NA",
+      "PAC A/A + THPE": -0.328694,
+      "PAC gaz": "NA",
+      "PAC géothermique + THPE": "NA",
+      "Chaudière bois + THPE": "NA",
+      "Chaudière THPE + chauffe-eau solaire": "NA"
+    },
+    "Chaudière gaz standard neuve": {
+      "Chaudière gaz THPE": -0.244929,
+      "PAC A/A + THPE": -0.293388
+    },
+    "Chaudière gaz THPE": {
+      "PAC A/A + THPE": -0.208605,
+      "PAC gaz": -0.27326,
+      "PAC géothermique + THPE": -0.345934,
+      "Chaudière THPE + chauffe-eau solaire": -0.058608
+    },
+    "PAC A/E + THPE (PAC hybride)": {
+      "PAC A/A + THPE": -0.04695,
+      "PAC géothermique + THPE": -0.27603
+    },
+    "PAC A/A + THPE": {
+      "PAC gaz": -0.129825,
+      "PAC géothermique + THPE": -0.216842
+    },
+    "PAC gaz": {
+      "Chaudière gaz THPE": 0.243145,
+      "PAC A/E + THPE (PAC hybride)": 0.088966,
+      "PAC géothermique + THPE": -0.1
+    },
+    "PAC géothermique + THPE": {
+      "Chaudière gaz THPE": 0.381272,
+      "PAC A/E + THPE (PAC hybride)": 1.073424,
+      "PAC A/A + THPE": 0.111111
+    },
+    "Chaudière bois + THPE": {
+      "Chaudière bois + THPE": "N.S"
+    },
+    "Chaudière THPE + chauffe-eau solaire": {
+      "Chaudière gaz THPE": -0.040311,
+      "PAC A/E + THPE (PAC hybride)": -0.11284,
+      "PAC A/A + THPE": -0.228016,
+      "PAC gaz": -0.305214
+    },
+    "Chaudière fioul standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.10726,
+      "Chaudière gaz THPE": -0.19346,
+      "PAC A/E + THPE (PAC hybride)": -0.254415,
+      "PAC A/A + THPE": -0.35121,
+      "PAC gaz": -0.416089,
+      "Chaudière THPE + chauffe-eau solaire": -0.159581
+    },
+    "Chaudière fioul THPE": {
+      "Chaudière gaz standard neuve": 0.185925,
+      "Chaudière gaz THPE": 0.071416,
+      "PAC A/E + THPE (PAC hybride)": -0.009557,
+      "PAC A/A + THPE": -0.138141,
+      "PAC gaz": -0.224327,
+      "Chaudière THPE + chauffe-eau solaire": 0.116421
+    }
   },
-  "Chaudière gaz standard neuve": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "N.S",
-    "Chaudière gaz THPE": -0.244929,
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": -0.293388,
-    "PAC gaz": "NA",
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
+
+  "Appartement chauffage indiv": {
+    "Chaudière gaz standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.049964,
+      "Chaudière gaz THPE": -0.282655,
+      "PAC A/A + THPE": -0.328694
+    },
+    "Chaudière gaz standard neuve": {
+      "Chaudière gaz THPE": -0.244929,
+      "PAC A/A + THPE": -0.293388
+    },
+    "Chaudière gaz THPE": {
+      "PAC A/A + THPE": -0.208605
+    },
+    "PAC A/E + THPE (PAC hybride)": {
+      "PAC A/A + THPE": -0.04695
+    },
+    "PAC A/A + THPE": {
+      "PAC gaz": -0.129825,
+      "PAC géothermique + THPE": -0.216842
+    },
+    "PAC gaz": {
+      "Chaudière gaz THPE": 0.243145,
+      "PAC A/E + THPE (PAC hybride)": 0.088966,
+      "PAC géothermique + THPE": -0.1
+    },
+    "PAC géothermique + THPE": {
+      "Chaudière gaz THPE": 0.381272,
+      "PAC A/E + THPE (PAC hybride)": 1.073424,
+      "PAC A/A + THPE": 0.111111
+    },
+    "Chaudière THPE + chauffe-eau solaire": {
+      "Chaudière gaz THPE": -0.040311,
+      "PAC A/E + THPE (PAC hybride)": -0.11284,
+      "PAC A/A + THPE": -0.228016,
+      "PAC gaz": -0.305214
+    },
+    "Chaudière fioul standard de plus de 15 ans": {
+      "Chaudière gaz THPE": -0.19346,
+      "PAC A/E + THPE (PAC hybride)": -0.254415,
+      "PAC A/A + THPE": -0.35121,
+      "PAC gaz": -0.416089
+    },
+    "Chaudière fioul THPE": {
+      "Chaudière gaz THPE": 0.071416,
+      "PAC A/E + THPE (PAC hybride)": -0.009557,
+      "PAC A/A + THPE": -0.138141,
+      "PAC gaz": -0.224327
+    }
   },
-  "Chaudière gaz THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "N.S",
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": -0.208605,
-    "PAC gaz": -0.27326,
-    "PAC géothermique + THPE": -0.345934,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.058608
+
+  "Appartement chauffage coll": {
+    "Chaudière gaz standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.050075,
+      "Chaudière gaz THPE": -0.231848,
+      "PAC A/E + THPE (PAC hybride)": -0.305859,
+      "PAC A/A + THPE": -0.39018,
+      "PAC gaz": -0.448905,
+      "PAC géothermique + THPE": -0.506992,
+      "Chaudière THPE + chauffe-eau solaire": -0.273255
+    },
+    "Chaudière gaz standard neuve": {
+      "Chaudière gaz THPE": -0.191355,
+      "PAC A/E + THPE (PAC hybride)": -0.269267,
+      "PAC A/A + THPE": -0.35879,
+      "PAC gaz": -0.420339,
+      "PAC géothermique + THPE": -0.480595,
+      "Chaudière THPE + chauffe-eau solaire": -0.235855
+    },
+    "Chaudière gaz THPE": {
+      "PAC A/E + THPE (PAC hybride)": -0.096349,
+      "PAC A/A + THPE": -0.20886,
+      "PAC gaz": -0.27326,
+      "PAC géothermique + THPE": -0.34603,
+      "Chaudière THPE + chauffe-eau solaire": -0.058608
+    },
+    "PAC A/E + THPE (PAC hybride)": {
+      "PAC A/A + THPE": -0.04695,
+      "PAC géothermique + THPE": -0.275995
+    },
+    "PAC A/A + THPE": {
+      "PAC gaz": -0.129825,
+      "PAC géothermique + THPE": -0.216842
+    },
+    "PAC gaz": {
+      "Chaudière gaz THPE": 0.243145,
+      "PAC A/E + THPE (PAC hybride)": 0.088966,
+      "PAC géothermique + THPE": -0.1
+    },
+    "PAC géothermique + THPE": {
+      "Chaudière gaz THPE": 0.381272,
+      "PAC A/E + THPE (PAC hybride)": 1.073424,
+      "PAC A/A + THPE": 0.111111
+    },
+    "Chaudière THPE + chauffe-eau solaire": {
+      "Chaudière gaz THPE": -0.040311,
+      "PAC A/E + THPE (PAC hybride)": -0.11284,
+      "PAC A/A + THPE": -0.228016,
+      "PAC gaz": -0.305214
+    },
+    "Chaudière fioul standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.10726,
+      "Chaudière gaz THPE": -0.19346,
+      "PAC A/E + THPE (PAC hybride)": -0.254415,
+      "PAC A/A + THPE": -0.35121,
+      "PAC gaz": -0.416089,
+      "Chaudière THPE + chauffe-eau solaire": -0.159581
+    },
+    "Chaudière fioul THPE": {
+      "Chaudière gaz standard neuve": 0.185925,
+      "Chaudière gaz THPE": 0.071416,
+      "PAC A/E + THPE (PAC hybride)": -0.009557,
+      "PAC A/A + THPE": -0.138141,
+      "PAC gaz": -0.224327,
+      "Chaudière THPE + chauffe-eau solaire": 0.116421
+    }
   },
-  "PAC A/E + THPE (PAC hybride)": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "NA",
-    "PAC A/E + THPE (PAC hybride)": "N.S",
-    "PAC A/A + THPE": -0.04695,
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": -0.27603,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC A/A + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.081754,
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": "N.S",
-    "PAC gaz": -0.129825,
-    "PAC géothermique + THPE": -0.216842,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC gaz": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.243145,
-    "PAC A/E + THPE (PAC hybride)": 0.088966,
-    "PAC A/A + THPE": "N.S",
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": -0.1,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC géothermique + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.381272,
-    "PAC A/E + THPE (PAC hybride)": 1.073424,
-    "PAC A/A + THPE": 0.111111,
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": "N.S",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "Chaudière bois + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "NA",
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": "NA",
-    "PAC gaz": "NA",
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "N.S",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "Chaudière THPE + chauffe-eau solaire": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": -0.040311,
-    "PAC A/E + THPE (PAC hybride)": -0.11284,
-    "PAC A/A + THPE": -0.228016,
-    "PAC gaz": -0.305214,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "N.S"
-  },
-  "Chaudière fioul standard de plus de 15 ans": {
-    "Chaudière gaz standard de plus de 15 ans": 0.12034,
-    "Chaudière gaz standard neuve": -0.10726,
-    "Chaudière gaz THPE": -0.19346,
-    "PAC A/E + THPE (PAC hybride)": -0.254415,
-    "PAC A/A + THPE": -0.35121,
-    "PAC gaz": -0.416089,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.159581
-  },
-  "Chaudière fioul THPE": {
-    "Chaudière gaz standard de plus de 15 ans": 0.488271,
-    "Chaudière gaz standard neuve": 0.185925,
-    "Chaudière gaz THPE": 0.071416,
-    "PAC A/E + THPE (PAC hybride)": -0.009557,
-    "PAC A/A + THPE": -0.138141,
-    "PAC gaz": -0.224327,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": 0.116421
-  }
-}
-"Appartement chauffage coll": {
-  "Chaudière gaz standard de plus de 15 ans": {
-    "Chaudière gaz standard de plus de 15 ans": "N.S",
-    "Chaudière gaz standard neuve": -0.050075,
-    "Chaudière gaz THPE": -0.231848,
-    "PAC A/E + THPE (PAC hybride)": -0.305859,
-    "PAC A/A + THPE": -0.39018,
-    "PAC gaz": -0.448905,
-    "PAC géothermique + THPE": -0.506992,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.273255
-  },
-  "Chaudière gaz standard neuve": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "N.S",
-    "Chaudière gaz THPE": -0.191355,
-    "PAC A/E + THPE (PAC hybride)": -0.269267,
-    "PAC A/A + THPE": -0.35879,
-    "PAC gaz": -0.420339,
-    "PAC géothermique + THPE": -0.480595,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.235855
-  },
-  "Chaudière gaz THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "N.S",
-    "PAC A/E + THPE (PAC hybride)": -0.096349,
-    "PAC A/A + THPE": -0.20886,
-    "PAC gaz": -0.27326,
-    "PAC géothermique + THPE": -0.34603,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.058608
-  },
-  "PAC A/E + THPE (PAC hybride)": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "NA",
-    "PAC A/E + THPE (PAC hybride)": "N.S",
-    "PAC A/A + THPE": -0.04695,
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": -0.275995,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC A/A + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.081754,
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": "N.S",
-    "PAC gaz": -0.129825,
-    "PAC géothermique + THPE": -0.216842,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC gaz": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.243145,
-    "PAC A/E + THPE (PAC hybride)": 0.088966,
-    "PAC A/A + THPE": "N.S",
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": -0.1,
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "PAC géothermique + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": 0.381272,
-    "PAC A/E + THPE (PAC hybride)": 1.073424,
-    "PAC A/A + THPE": 0.111111,
-    "PAC gaz": "N.S",
-    "PAC géothermique + THPE": "N.S",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "Chaudière bois + THPE": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": "NA",
-    "PAC A/E + THPE (PAC hybride)": "NA",
-    "PAC A/A + THPE": "NA",
-    "PAC gaz": "NA",
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "N.S",
-    "Chaudière THPE + chauffe-eau solaire": "NA"
-  },
-  "Chaudière THPE + chauffe-eau solaire": {
-    "Chaudière gaz standard de plus de 15 ans": "NA",
-    "Chaudière gaz standard neuve": "NA",
-    "Chaudière gaz THPE": -0.040311,
-    "PAC A/E + THPE (PAC hybride)": -0.11284,
-    "PAC A/A + THPE": -0.228016,
-    "PAC gaz": -0.305214,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": "N.S"
-  },
-  "Chaudière fioul standard de plus de 15 ans": {
-    "Chaudière gaz standard de plus de 15 ans": 0.12034,
-    "Chaudière gaz standard neuve": -0.10726,
-    "Chaudière gaz THPE": -0.19346,
-    "PAC A/E + THPE (PAC hybride)": -0.254415,
-    "PAC A/A + THPE": -0.35121,
-    "PAC gaz": -0.416089,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": -0.159581
-  },
-  "Chaudière fioul THPE": {
-    "Chaudière gaz standard de plus de 15 ans": 0.488271,
-    "Chaudière gaz standard neuve": 0.185925,
-    "Chaudière gaz THPE": 0.071416,
-    "PAC A/E + THPE (PAC hybride)": -0.009557,
-    "PAC A/A + THPE": -0.138141,
-    "PAC gaz": -0.224327,
-    "PAC géothermique + THPE": "NA",
-    "Chaudière bois + THPE": "NA",
-    "Chaudière THPE + chauffe-eau solaire": 0.116421
-  }
-}
-"Bâtiment tertiaire": {
-  "Chaudière gaz standard de plus de 15 ans": {
-    "Chaudière gaz standard neuve": -0.05097,
-    "Chaudière gaz THPE": -0.243767,
-    "Chaudière THPE + chauffe-eau solaire": -0.288089,
-    "PAC gaz": -0.450416,
-    "PAC A/E + THPE (PAC hybride)": -0.316787
-  },
-  "Chaudière gaz standard neuve": {
-    "Chaudière gaz THPE": -0.203152,
-    "Chaudière THPE + chauffe-eau solaire": -0.249854,
-    "PAC gaz": -0.420899,
-    "PAC A/E + THPE (PAC hybride)": -0.280093
-  },
-  "Chaudière gaz THPE": {
-    "Chaudière THPE + chauffe-eau solaire": -0.058608,
-    "PAC gaz": -0.27326,
-    "PAC A/E + THPE (PAC hybride)": -0.096557
-  },
-  "PAC gaz": {
-    "PAC A/E + THPE (PAC hybride)": 0.243145
-  },
-  "Chaudière fioul standard de plus de 15 ans": {
-    "Chaudière gaz standard neuve": -0.10726,
-    "Chaudière gaz THPE": -0.19346,
-    "Chaudière THPE + chauffe-eau solaire": -0.159581,
-    "PAC gaz": -0.416089,
-    "PAC A/E + THPE (PAC hybride)": -0.254415
-  },
-  "Chaudière fioul THPE": {
-    "Chaudière gaz standard neuve": 0.185925,
-    "Chaudière gaz THPE": 0.071416,
-    "Chaudière THPE + chauffe-eau solaire": 0.116421,
-    "PAC gaz": -0.224327,
-    "PAC A/E + THPE (PAC hybride)": -0.009557
+
+  "Bâtiment tertiaire": {
+    "Chaudière gaz standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.05097,
+      "Chaudière gaz THPE": -0.243767,
+      "Chaudière THPE + chauffe-eau solaire": -0.288089,
+      "PAC gaz": -0.450416,
+      "PAC A/E + THPE (PAC hybride)": -0.316787
+    },
+    "Chaudière gaz standard neuve": {
+      "Chaudière gaz THPE": -0.203152,
+      "Chaudière THPE + chauffe-eau solaire": -0.249854,
+      "PAC gaz": -0.420899,
+      "PAC A/E + THPE (PAC hybride)": -0.280093
+    },
+    "Chaudière gaz THPE": {
+      "Chaudière THPE + chauffe-eau solaire": -0.058608,
+      "PAC gaz": -0.27326,
+      "PAC A/E + THPE (PAC hybride)": -0.096557
+    },
+    "PAC gaz": {
+      "PAC A/E + THPE (PAC hybride)": 0.243145
+    },
+    "Chaudière fioul standard de plus de 15 ans": {
+      "Chaudière gaz standard neuve": -0.10726,
+      "Chaudière gaz THPE": -0.19346,
+      "Chaudière THPE + chauffe-eau solaire": -0.159581,
+      "PAC gaz": -0.416089,
+      "PAC A/E + THPE (PAC hybride)": -0.254415
+    },
+    "Chaudière fioul THPE": {
+      "Chaudière gaz standard neuve": 0.185925,
+      "Chaudière gaz THPE": 0.071416,
+      "Chaudière THPE + chauffe-eau solaire": 0.116421,
+      "PAC gaz": -0.224327,
+      "PAC A/E + THPE (PAC hybride)": -0.009557
+    }
   }
 }

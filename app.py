@@ -231,7 +231,7 @@ df_chart = pd.DataFrame({
     "tCO₂/an": [emissions_avant, emissions_apres]
 }).set_index("Phase")
 
-col_graph, col_blank = st.columns([1, 3])  # 1/4 largeur pour le graphe
+col_graph, col_blank = st.columns([1, 3])  # 1/2 largeur pour le graphe
 with col_graph:
     st.bar_chart(df_chart, height=40)  # ultra-compact, smartphone-style
 

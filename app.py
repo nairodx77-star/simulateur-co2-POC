@@ -189,7 +189,8 @@ elif not sol_final:
 # ==============================
 if sol_init and sol_final:
     cL, cR = st.columns(2)
-conso_str = cL.text_input("Consommation AVANT (kWh PCI/an)", value="", placeholder="Ex: 20000")
+  
+    conso_str = cL.text_input("Consommation AVANT (kWh PCI/an)", value="", placeholder="Ex: 20000")
     if conso_str.strip() == "":
         st.warning("⚠️ Merci de saisir une consommation AVANT pour lancer les calculs.")
         st.stop()

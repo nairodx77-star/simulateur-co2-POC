@@ -131,9 +131,25 @@ with st.expander("⚙️ Admin – matrices & facteurs (JSON)"):
                 factors = json.load(upF); st.success("Facteurs importés (session).")
             except Exception as e:
                 st.error(f"Import facteurs KO : {e}")
+def is_numeric(x) -> bool:
+    return isinstance(x, (int, float)) and pd.notna(x)
 
+def applicable_after_options(matrices: dict, bat: str, sol_init: str) -> list[str]:
+    """
+    Retourne uniquement les solutions APRÈS applicables (valeur numérique),
+    en filtrant les entrées NA / N.A / N.S / chaînes, etc.
+    """
+    options = []
+    try:
+        mapping_apres = matrices[bat][sol_init]
+        for sol_apres, val in mapping_apres.items():
+            if is_numeric(val):
+                options.append(sol_apres)
+        return options
+    except Exception:
+        return []
 # ==============================
-# UI – Saisie
+# UI – Saisie (avec compatibilité NA/NS)
 # ==============================
 batiments = list(matrices.keys())
 if not batiments:
@@ -141,17 +157,23 @@ if not batiments:
     st.stop()
 
 bat = st.selectbox("Type de bâtiment", batiments)
+
 solutions_avant = list(matrices.get(bat, {}).keys())
 if not solutions_avant:
-    st.error("Aucune solution AVANT pour ce bâtiment.")
+    st.error("Aucune solution AVANT pour ce bâtiment. Complétez les matrices en Admin.")
     st.stop()
 
 sol_init = st.selectbox("Solution AVANT rénovation", solutions_avant)
-solutions_apres = list(matrices[bat].get(sol_init, {}).keys())
-if not solutions_apres:
-    st.warning("Aucune solution APRÈS pour ce choix. Modifiez 'AVANT' ou complétez les matrices.")
-    solutions_apres = ["— aucune —"]
-sol_final = st.selectbox("Solution APRÈS rénovation", solutions_apres)
+
+# Filtrer les solutions APRÈS : on ne garde que celles dont la valeur est numérique (applicable)
+solutions_apres_applicables = applicable_after_options(matrices, bat, sol_init)
+
+if not solutions_apres_applicables:
+    st.warning("Aucune solution APRÈS applicable pour cette solution AVANT (valeurs N.A / N.S). "
+               "Choisissez une autre solution AVANT ou complétez les matrices en Admin.")
+    st.stop()
+
+sol_final = st.selectbox("Solution APRÈS rénovation", solutions_apres_applicables)
 
 cL, cR = st.columns(2)
 conso = cL.number_input("Consommation AVANT (kWh PCI/an)", min_value=1000, value=20000, step=500)
@@ -172,7 +194,7 @@ else:
 def get_gain_auto(b, s_init, s_final):
     try:
         v = matrices[b][s_init][s_final]
-        return float(v) if isinstance(v, (int, float)) else 0.0
+        return float(v) if is_numeric(v) else 0.0
     except Exception:
         return 0.0
 

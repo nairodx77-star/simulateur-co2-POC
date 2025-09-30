@@ -77,16 +77,24 @@ DEFAULT_MATRICES = {
 # ==============================
 # LOAD JSON FROM REPO (with fallback)
 # ==============================
-@st.cache_data
 def load_json_file(path, default_dict):
+    """Charge le JSON depuis le repo à chaque run (pas de cache)."""
     try:
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            st.session_state[f"{path}_source"] = "fichier"
+            return data
     except Exception:
+        st.session_state[f"{path}_source"] = "defaut"
         return default_dict
 
+# Chargement sans cache
 matrices = load_json_file("matrices.json", DEFAULT_MATRICES)
 factors  = load_json_file("facteurs.json", DEFAULT_FACTORS)
+
+# Bouton pour recharger (si tu viens de committer un nouveau JSON)
+if st.button("🔄 Recharger matrices/facteurs (forcer relecture fichiers)"):
+    st.rerun()
 
 # ==============================
 # ADMIN (éditer / importer / exporter)

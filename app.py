@@ -20,7 +20,7 @@ def load_data():
 perf, factors = load_data()
 
 # ==============================
-# EXTRACTION MATRICES PAR BATIMENT
+# EXTRACTION MATRICES
 # ==============================
 def extract_matrix(start_row, label):
     """Extrait une matrice de performances relatives pour un type de bâtiment"""
@@ -35,27 +35,43 @@ def extract_matrix(start_row, label):
         row_init_candidates = block.applymap(lambda x: isinstance(x, str) and "Solution initiale" in x)
         coords_init = list(zip(*row_init_candidates.values.nonzero()))
         if coords_init:
-            row_pose = coords_init[0][0] + 2   # souvent "Solution posée" est 2 lignes plus bas
+            row_pose = coords_init[0][0] + 2   # souvent 2 lignes plus bas
         else:
-            st.warning(f"Onglet Excel mal formaté pour {label} → impossible d’extraire la matrice")
             return [], [], pd.DataFrame()
     else:
         row_pose = coords[0][0]
 
-    # Solutions initiales = chercher la première colonne non nulle sous row_pose
+    # Solutions initiales (col 3 sinon col 1)
     sols_init = block.iloc[row_pose+2:, 3].dropna().tolist()
     if not sols_init:
         sols_init = block.iloc[row_pose+2:, 1].dropna().tolist()
 
     # Solutions posées = en-têtes juste après "Solution posée"
     sols_pose = block.iloc[row_pose+1].dropna().tolist()
-    sols_pose = [s for s in sols_pose if isinstance(s, str)][1:]  # ignorer première cellule vide
+    sols_pose = [s for s in sols_pose if isinstance(s, str)][1:]  # ignorer 1ère cellule vide
 
     # Matrice
     mat = block.iloc[row_pose+2:row_pose+2+len(sols_init), 4:4+len(sols_pose)]
     mat.index = sols_init[:len(mat)]
     mat.columns = sols_pose
     return sols_init, sols_pose, mat
+
+# Construire dictionnaire des bâtiments
+bat_matrices = {}
+for label, row in {
+    "Maison individuelle": 18,
+    "Appartement indiv": 45,
+    "Appartement coll": 62,
+    "Bâtiment tertiaire": 80
+}.items():
+    sols_init, sols_apres, mat = extract_matrix(row, label)
+    if sols_init and sols_apres and not mat.empty:
+        bat_matrices[label] = (sols_init, sols_apres, mat)
+
+# Vérifier qu’on a au moins un bâtiment valide
+if not bat_matrices:
+    st.error("⚠️ Impossible d’extraire les matrices depuis l’Excel. Vérifie la structure du fichier.")
+    st.stop()
 
 # ==============================
 # EXTRACTION FACTEURS D'ÉMISSION
@@ -81,9 +97,6 @@ FE_BIOMETH = 0.0417
 bat = st.selectbox("Type de bâtiment", list(bat_matrices.keys()))
 
 sols_init, sols_apres, mat = bat_matrices[bat]
-if not sols_init or not sols_apres or mat.empty:
-    st.stop()
-
 sol_init = st.selectbox("Solution AVANT rénovation", sols_init)
 sol_final = st.selectbox("Solution APRÈS rénovation", sols_apres)
 

@@ -188,16 +188,6 @@ def audit_matrix(mats: dict) -> dict:
             report[bat] = manquantes
     return report
 
-
-with st.expander("🔎 Audit JSON (sanity check)", expanded=False):
-    rep = audit_matrix(matrices)
-    if not rep:
-        st.success("OK : toutes les solutions AVANT ont au moins une option APRÈS applicable.")
-    else:
-        for bat, issues in rep.items():
-            st.warning(f"{bat} :")
-            for msg in issues:
-                st.write("- ", msg)
 # ==============================
 # UI – Saisie (avec compatibilité NA/NS)
 # ==============================

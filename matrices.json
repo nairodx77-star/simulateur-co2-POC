@@ -121,28 +121,40 @@
     }
   },
 
-  "Bâtiment tertiaire": {
-    "Chaudière gaz standard >15 ans": {
-      "Chaudière gaz THPE": -0.18,
-      "PAC A/E + appoint gaz": -0.25,
-      "PAC eau/eau + appoint": -0.30,
-      "Réseau de chaleur (mix décarboné)": -0.15
-    },
-    "Chaudière fioul >15 ans": {
-      "Chaudière gaz THPE": -0.28,
-      "PAC A/E + appoint gaz": -0.36,
-      "PAC eau/eau + appoint": -0.42,
-      "Réseau de chaleur (mix décarboné)": -0.25
-    },
-    "PAC A/E ancienne": {
-      "PAC A/E + appoint gaz (haute perf)": -0.12,
-      "PAC eau/eau + appoint": -0.18,
-      "Chaudière gaz THPE": "NA"
-    },
-    "Réseau de chaleur ancien": {
-      "Réseau de chaleur (mix décarboné)": -0.12,
-      "PAC eau/eau + appoint": -0.20,
-      "Chaudière gaz THPE": "NA"
-    }
+ "Bâtiment tertiaire": {
+  "Chaudière gaz standard >15 ans": {
+    "Chaudière gaz standard neuve": -0.12,
+    "Chaudière gaz THPE": -0.18,
+    "Chaudière THPE + chauffe-eau solaire": -0.22,
+    "PAC gaz": -0.20,
+    "PAC A/E + THPE (PAC hybride)": -0.30
+  },
+  "Chaudière gaz standard neuve": {
+    "Chaudière gaz THPE": -0.10,
+    "Chaudière THPE + chauffe-eau solaire": -0.15,
+    "PAC gaz": -0.12,
+    "PAC A/E + THPE (PAC hybride)": -0.25
+  },
+  "Chaudière gaz THPE": {
+    "Chaudière THPE + chauffe-eau solaire": -0.08,
+    "PAC gaz": -0.10,
+    "PAC A/E + THPE (PAC hybride)": -0.20
+  },
+  "PAC gaz": {
+    "PAC A/E + THPE (PAC hybride)": -0.15,
+    "Chaudière THPE + chauffe-eau solaire": "NA"
+  },
+  "Chaudière fioul standard >15 ans": {
+    "Chaudière gaz standard neuve": -0.20,
+    "Chaudière gaz THPE": -0.28,
+    "Chaudière THPE + chauffe-eau solaire": -0.32,
+    "PAC gaz": -0.30,
+    "PAC A/E + THPE (PAC hybride)": -0.42
+  },
+  "Chaudière fioul THPE": {
+    "Chaudière gaz THPE": -0.18,
+    "Chaudière THPE + chauffe-eau solaire": -0.22,
+    "PAC gaz": -0.20,
+    "PAC A/E + THPE (PAC hybride)": -0.35
   }
 }

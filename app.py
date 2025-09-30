@@ -224,10 +224,10 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-fig, ax = plt.subplots(figsize=(3, 2))  # taille réduite (≈ ÷3)
+fig, ax = plt.subplots(figsize=(1.6, 1.2))  # très petit graphe
 ax.bar(["Avant", "Après"], [emissions_avant, emissions_apres], color=[GRDF_BLUE, GRDF_GREEN])
-ax.set_ylabel("tCO₂/an")
-ax.set_title("Émissions CO₂ – Avant vs Après", fontsize=10)
+ax.set_ylabel("tCO₂/an", fontsize=8)
+ax.set_title("Émissions CO₂ – Avant vs Après", fontsize=9)
 st.pyplot(fig)
 
 # ==============================

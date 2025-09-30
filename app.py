@@ -27,11 +27,13 @@ st.markdown(f"""
 # ==============================
 # EN-TÊTE AVEC LOGOS
 # ==============================
+st.markdown("<div style='margin-top:30px;'></div>", unsafe_allow_html=True)  # espace pour descendre
+
 col_logo1, col_spacer, col_logo2 = st.columns([1, 5, 1])
 with col_logo1:
-    st.image("Grdf.png", width=120)
+    st.image("Grdf.png", width=180)   # agrandi
 with col_logo2:
-    st.image("Simulateur.png", width=120)
+    st.image("Simulateur.png", width=180)  # agrandi
 
 st.title("🔵 Simulateur Gains CO₂ – GRDF")
 st.caption("Version JSON (sans Excel) – matrices & facteurs chargés depuis le repo, éditables en ligne.")

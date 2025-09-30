@@ -148,6 +148,30 @@ def applicable_after_options(matrices: dict, bat: str, sol_init: str) -> list[st
         return options
     except Exception:
         return []
+      def audit_matrix(mats: dict) -> dict:
+    report = {}
+    for bat, m in mats.items():
+        manquantes = []
+        for sol_init, mapping in m.items():
+            if not isinstance(mapping, dict):
+                manquantes.append(f"{sol_init} → mapping non dict")
+                continue
+            # aucune option applicable ?
+            if not any(isinstance(v, (int, float)) for v in mapping.values()):
+                manquantes.append(f"{sol_init} → aucune solution APRÈS applicable (tout NA/NS ?)")
+        if manquantes:
+            report[bat] = manquantes
+    return report
+
+with st.expander("🔎 Audit JSON (sanity check)", expanded=False):
+    rep = audit_matrix(matrices)
+    if not rep:
+        st.success("OK : toutes les solutions AVANT ont au moins une option APRÈS applicable.")
+    else:
+        for bat, issues in rep.items():
+            st.warning(f"{bat} :")
+            for msg in issues:
+                st.write("- ", msg)
 # ==============================
 # UI – Saisie (avec compatibilité NA/NS)
 # ==============================

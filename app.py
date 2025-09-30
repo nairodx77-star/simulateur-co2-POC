@@ -78,4 +78,6 @@ if hybride == "Oui":
     colh1, colh2 = st.columns(2)
     part_elec = colh1.slider("Répartition électricité (%)", 0, 100, 50)
     part_gaz = 100 - part_elec
-    colh2.write(f"Répartition gaz : {part
+    colh2.write(f"Répartition gaz : {part_gaz}%")
+else:
+    part_elec, part_gaz = 0, 100

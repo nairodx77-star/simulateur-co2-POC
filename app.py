@@ -190,17 +190,17 @@ elif not sol_final:
 if sol_init and sol_final:
     cL, cR = st.columns(2)
 conso_str = cL.text_input("Consommation AVANT (kWh PCI/an)", value="", placeholder="Ex: 20000")
-if conso_str.strip() == "":
-    st.warning("⚠️ Merci de saisir une consommation AVANT pour lancer les calculs.")
-    st.stop()
-try:
-    conso = float(conso_str)
-    if conso < 1000:
-        st.error("La consommation doit être au moins de 1000 kWh PCI/an.")
+    if conso_str.strip() == "":
+        st.warning("⚠️ Merci de saisir une consommation AVANT pour lancer les calculs.")
         st.stop()
-except ValueError:
-    st.error("Valeur de consommation invalide. Entrez un nombre (kWh PCI/an).")
-    st.stop()
+    try:
+        conso = float(conso_str)
+        if conso < 1000:
+            st.error("La consommation doit être au moins de 1000 kWh PCI/an.")
+            st.stop()
+    except ValueError:
+        st.error("Valeur de consommation invalide. Entrez un nombre (kWh PCI/an).")
+        st.stop()
 
     gaz_vert = cR.slider("% de gaz vert (biométhane) au contrat", 0, 100, 0)
 

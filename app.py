@@ -148,7 +148,7 @@ def applicable_after_options(matrices: dict, bat: str, sol_init: str) -> list[st
         return options
     except Exception:
         return []
-      def audit_matrix(mats: dict) -> dict:
+def audit_matrix(mats: dict) -> dict:
     report = {}
     for bat, m in mats.items():
         manquantes = []

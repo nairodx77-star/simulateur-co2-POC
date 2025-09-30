@@ -27,7 +27,7 @@ st.markdown(f"""
 # ==============================
 # EN-TÊTE AVEC LOGOS
 # ==============================
-st.markdown("<div style='margin-top:30px;'></div>", unsafe_allow_html=True)  # espace pour descendre
+st.markdown("<div style='margin-top:35px;'></div>", unsafe_allow_html=True)  # espace pour descendre
 
 col_logo1, col_spacer, col_logo2 = st.columns([1, 5, 1])
 with col_logo1:

@@ -24,35 +24,38 @@ perf, factors = load_data()
 # ==============================
 def extract_matrix(start_row, label):
     """Extrait une matrice de performances relatives pour un type de bâtiment"""
-    block = perf.iloc[start_row-2:start_row+40, :].reset_index(drop=True)
+    block = perf.iloc[start_row-5:start_row+50, :].reset_index(drop=True)
 
-    # Trouver la ligne "Solution posée"
+    # Chercher la ligne "Solution posée" partout
     row_pose_candidates = block.applymap(lambda x: isinstance(x, str) and "Solution posée" in x)
     coords = list(zip(*row_pose_candidates.values.nonzero()))
+
     if not coords:
-        st.error(f"Onglet Excel mal formaté pour {label} (⚠️ 'Solution posée' introuvable)")
-        return [], [], pd.DataFrame()
-    row_pose = coords[0][0]
+        # fallback : chercher "Solution initiale"
+        row_init_candidates = block.applymap(lambda x: isinstance(x, str) and "Solution initiale" in x)
+        coords_init = list(zip(*row_init_candidates.values.nonzero()))
+        if coords_init:
+            row_pose = coords_init[0][0] + 2   # souvent "Solution posée" est 2 lignes plus bas
+        else:
+            st.warning(f"Onglet Excel mal formaté pour {label} → impossible d’extraire la matrice")
+            return [], [], pd.DataFrame()
+    else:
+        row_pose = coords[0][0]
 
-    # Solutions initiales = col 3 (souvent), mais on filtre les NaN et entêtes
+    # Solutions initiales = chercher la première colonne non nulle sous row_pose
     sols_init = block.iloc[row_pose+2:, 3].dropna().tolist()
+    if not sols_init:
+        sols_init = block.iloc[row_pose+2:, 1].dropna().tolist()
 
-    # Solutions posées = en-têtes de colonnes juste après la ligne "Solution posée"
-    sols_pose = block.iloc[row_pose+1].dropna().tolist()[1:]  # skip la 1ère cellule
+    # Solutions posées = en-têtes juste après "Solution posée"
+    sols_pose = block.iloc[row_pose+1].dropna().tolist()
+    sols_pose = [s for s in sols_pose if isinstance(s, str)][1:]  # ignorer première cellule vide
 
-    # Matrice des gains
+    # Matrice
     mat = block.iloc[row_pose+2:row_pose+2+len(sols_init), 4:4+len(sols_pose)]
     mat.index = sols_init[:len(mat)]
     mat.columns = sols_pose
     return sols_init, sols_pose, mat
-
-# Associer chaque type de bâtiment à une zone de l’onglet Excel
-bat_matrices = {
-    "Maison individuelle": extract_matrix(18, "Maison"),
-    "Appartement indiv": extract_matrix(45, "Appart indiv"),
-    "Appartement coll": extract_matrix(62, "Appart coll"),
-    "Bâtiment tertiaire": extract_matrix(80, "Tertiaire")
-}
 
 # ==============================
 # EXTRACTION FACTEURS D'ÉMISSION

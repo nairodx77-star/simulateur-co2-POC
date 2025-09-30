@@ -2,21 +2,28 @@ import streamlit as st
 import pandas as pd
 import json
 from io import StringIO
-import matplotlib.pyplot as plt
 
 # ==============================
 # CONFIG / THEME
 # ==============================
 st.set_page_config(page_title="Simulateur GRDF CO₂", layout="wide")
 GRDF_BLUE = "#004595"; GRDF_TEAL = "#06A8A5"; GRDF_GREEN = "#71A950"; GRDF_YELLOW = "#F5A803"; GRDF_GREY = "#87929A"
+
 st.markdown(f"""
 <style>
   .block-container {{ padding-top: 1rem; }}
   h1, h2, h3, h4 {{ color: {GRDF_BLUE} !important; }}
   .stMetric > div > div > div {{ color: {GRDF_BLUE}; }}
   .grdf-badge {{ background:{GRDF_TEAL}; color:white; padding:.3rem .6rem; border-radius:.5rem; font-weight:600; display:inline-block; }}
+  .gain-hero {{
+      text-align:center; margin: 0.8rem 0 1rem 0;
+      font-size: 2.1rem; font-weight: 800; color: {GRDF_GREEN};
+      line-height: 1.2;
+  }}
+  .gain-hero small {{ display:block; font-size: 0.9rem; color: {GRDF_GREY}; font-weight:600; }}
 </style>
 """, unsafe_allow_html=True)
+
 st.title("🔵 Simulateur Gains CO₂ – GRDF")
 st.caption("Version JSON (sans Excel) – matrices & facteurs chargés depuis le repo, éditables en ligne.")
 
@@ -89,7 +96,7 @@ with st.expander("⚙️ Admin – matrices & facteurs (JSON)"):
     t1, t2, t3 = st.tabs(["Matrices", "Facteurs", "Importer/Exporter"])
 
     with t1:
-        txt = st.text_area("Matrices JSON :", value=json.dumps(matrices, indent=2, ensure_ascii=False), height=380)
+        txt = st.text_area("Matrices JSON :", value=json.dumps(matrices, indent=2, ensure_ascii=False), height=360)
         if st.button("Mettre à jour (session) – matrices"):
             try:
                 matrices = json.loads(txt)
@@ -98,7 +105,7 @@ with st.expander("⚙️ Admin – matrices & facteurs (JSON)"):
                 st.error(f"JSON invalide : {e}")
 
     with t2:
-        txtf = st.text_area("Facteurs JSON :", value=json.dumps(factors, indent=2, ensure_ascii=False), height=200)
+        txtf = st.text_area("Facteurs JSON :", value=json.dumps(factors, indent=2, ensure_ascii=False), height=180)
         if st.button("Mettre à jour (session) – facteurs"):
             try:
                 factors = json.loads(txtf)
@@ -205,32 +212,25 @@ else:
 gain_co2 = emissions_avant - emissions_apres
 
 # ==============================
-# Affichage
+# HERO – Gain CO₂ mis en avant
 # ==============================
-st.subheader("📊 Résultats")
+st.markdown(f'<div class="gain-hero">🌿 Gain CO₂ : {gain_co2:.2f} t/an<small>(différence entre émissions AVANT et APRÈS)</small></div>', unsafe_allow_html=True)
+
+# ==============================
+# Résultats + Mini-graphe responsive
+# ==============================
+st.subheader("📊 Résultats détaillés")
 c1, c2, c3 = st.columns(3)
 c1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
 c2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
 c3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
-st.metric("✅ Gain CO₂ (tCO₂/an)", f"{gain_co2:.2f}")
-# Mise en avant du gain CO₂
-st.markdown(
-    f"""
-    <div style="text-align:center; margin: 2rem 0;">
-        <span style="font-size:2rem; color:{GRDF_GREEN}; font-weight:700;">
-            🌿 Gain CO₂ : {gain_co2:.2f} t/an
-        </span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-fig, ax = plt.subplots(figsize=(1, 0.8))  # mini graphique style smartphone
-ax.bar(["Avant", "Après"], [emissions_avant, emissions_apres],
-       color=[GRDF_BLUE, GRDF_GREEN])
-ax.set_ylabel("tCO₂/an", fontsize=6)
-ax.set_title("Émissions CO₂ – Avant vs Après", fontsize=7)
-ax.tick_params(axis='both', labelsize=6)
-st.pyplot(fig)
+
+# Mini-graphe (hauteur 120px) — se met à jour dynamiquement
+df_chart = pd.DataFrame({
+    "Phase": ["Avant", "Après"],
+    "tCO₂/an": [emissions_avant, emissions_apres]
+}).set_index("Phase")
+st.bar_chart(df_chart, height=120)
 
 # ==============================
 # Export CSV

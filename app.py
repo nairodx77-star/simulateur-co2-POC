@@ -213,10 +213,21 @@ c1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
 c2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
 c3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
 st.metric("✅ Gain CO₂ (tCO₂/an)", f"{gain_co2:.2f}")
-
-fig, ax = plt.subplots()
-ax.bar(["Avant", "Après"], [emissions_avant, emissions_apres])
-ax.set_ylabel("tCO₂/an"); ax.set_title("Émissions CO₂ – Avant vs Après")
+# Mise en avant du gain CO₂
+st.markdown(
+    f"""
+    <div style="text-align:center; margin: 2rem 0;">
+        <span style="font-size:2rem; color:{GRDF_GREEN}; font-weight:700;">
+            🌿 Gain CO₂ : {gain_co2:.2f} t/an
+        </span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+fig, ax = plt.subplots(figsize=(3, 2))  # taille réduite
+ax.bar(["Avant", "Après"], [emissions_avant, emissions_apres], color=[GRDF_BLUE, GRDF_GREEN])
+ax.set_ylabel("tCO₂/an")
+ax.set_title("Émissions CO₂ – Avant vs Après", fontsize=10)
 st.pyplot(fig)
 
 # ==============================

@@ -233,7 +233,7 @@ df_chart = pd.DataFrame({
 
 col_graph, col_blank = st.columns([1, 3])  # 1/4 largeur pour le graphe
 with col_graph:
-    st.bar_chart(df_chart, height=120)  # hauteur augmentée pour lisibilité
+    st.bar_chart(df_chart, height=600)  # hauteur augmentée pour lisibilité
 
 
 # ==============================

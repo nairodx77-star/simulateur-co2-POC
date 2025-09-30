@@ -225,16 +225,28 @@ c1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
 c2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
 c3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
 
-# Mini-graphe aligné à gauche (compact mais lisible)
+import altair as alt
+
+# Données
 df_chart = pd.DataFrame({
     "Phase": ["Avant", "Après"],
     "tCO₂/an": [emissions_avant, emissions_apres]
-}).set_index("Phase")
+})
 
-col_graph, col_blank = st.columns([1, 3])  # 1/4 largeur pour le graphe
+# Graphique Altair (compact en largeur, haut pour lisibilité)
+chart = alt.Chart(df_chart).mark_bar().encode(
+    x=alt.X("Phase", sort=["Avant", "Après"], axis=alt.Axis(title=None)),
+    y=alt.Y("tCO₂/an", axis=alt.Axis(title="tCO₂/an")),
+    color=alt.condition(
+        alt.datum.Phase == "Avant",
+        alt.value("#FF9999"),  # rouge clair
+        alt.value("#71A950")   # vert nature
+    )
+).properties(height=600, width=150)  # largeur fine, hauteur grande
+
+col_graph, col_blank = st.columns([1, 3])  # graphe à gauche
 with col_graph:
-    st.bar_chart(df_chart, height=600)  # hauteur augmentée pour lisibilité
-
+    st.altair_chart(chart, use_container_width=False)
 
 # ==============================
 # Export CSV

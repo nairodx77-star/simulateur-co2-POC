@@ -1,0 +1,74 @@
+{
+  "Maison individuelle": {
+    "Chaudière gaz standard >15 ans": {
+      "Chaudière gaz THPE": -0.25,
+      "PAC A/E + THPE (hybride)": -0.36,
+      "PAC A/A + THPE": -0.32,
+      "PAC gaz": -0.29,
+      "PAC géothermique + THPE": -0.47,
+      "Chaudière bois + THPE": -0.29
+    },
+    "Chaudière gaz standard neuve": {
+      "Chaudière gaz THPE": -0.22,
+      "PAC A/E + THPE (hybride)": -0.31,
+      "PAC A/A + THPE": -0.28,
+      "PAC gaz": -0.25,
+      "PAC géothermique + THPE": -0.44
+    },
+    "Chaudière gaz THPE": {
+      "PAC A/E + THPE (hybride)": -0.23,
+      "PAC A/A + THPE": -0.20,
+      "PAC gaz": -0.18,
+      "PAC géothermique + THPE": -0.29
+    },
+    "PAC A/E + THPE (hybride)": {
+      "PAC A/A + THPE": -0.08,
+      "PAC gaz": -0.06,
+      "PAC géothermique + THPE": -0.12
+    },
+    "PAC A/A + THPE": {
+      "PAC gaz": "NS",
+      "PAC géothermique + THPE": -0.10
+    },
+    "PAC gaz": {
+      "PAC géothermique + THPE": -0.07
+    },
+    "PAC géothermique + THPE": {},
+    "Chaudière bois + THPE": {
+      "PAC A/E + THPE (hybride)": -0.09,
+      "PAC géothermique + THPE": -0.11
+    },
+    "Chaudière fioul >15 ans": {
+      "Chaudière gaz THPE": -0.30,
+      "PAC A/E + THPE (hybride)": -0.40,
+      "PAC A/A + THPE": -0.36,
+      "PAC géothermique + THPE": -0.53
+    },
+    "Chaudière fioul THPE": {
+      "Chaudière gaz THPE": -0.19,
+      "PAC A/E + THPE (hybride)": -0.28,
+      "PAC géothermique + THPE": -0.38
+    }
+  },
+  "Appartement chauffage indiv": {
+    "Chaudière gaz standard >15 ans": {
+      "Chaudière gaz THPE": -0.22,
+      "PAC A/E + THPE (hybride)": -0.34,
+      "PAC A/A + THPE": -0.28,
+      "PAC gaz": -0.25
+    },
+    "Chaudière gaz THPE": {
+      "PAC A/E + THPE (hybride)": -0.20,
+      "PAC A/A + THPE": -0.16
+    },
+    "PAC A/E + THPE (hybride)": {
+      "PAC A/A + THPE": -0.07
+    },
+    "Chaudière fioul >15 ans": {
+      "Chaudière gaz THPE": -0.27,
+      "PAC A/E + THPE (hybride)": -0.37,
+      "PAC A/A + THPE": -0.30
+    }
+  },
+  "Appartement chauffage coll": {
+    "Chauffa

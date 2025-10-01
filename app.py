@@ -441,7 +441,7 @@ if st.session_state.get("show_popup", False):
         <img src="data:image/png;base64,{img_b64}" style="width:120px; border-radius:50%; margin-bottom:15px;" />
         <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
         <p>Il s'agit d'une expérimentation servant à démontrer qu'il est possible de développer un outils 100% fonctionnel en moins de 2H
-        grâce à Copilote n se basant uniquement su un cahier des charges.</p>
+        grâce à Copilote à partir d'un simple cahier des charges.</p>
         <p style="font-size:0.8rem; color:{GRDF_GREY};">
         Disclaimer : Dans le cadre de ce "POC" le code utilisé a été généré intégralement par l'IA
         sans aucune intervention humaine.

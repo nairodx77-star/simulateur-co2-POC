@@ -440,6 +440,14 @@ if st.session_state.get("show_popup", False):
                 color:white; border:none; border-radius:8px; cursor:pointer;">
                 J'ai compris
             </button>
+            <script>
+document.getElementById("closePopupBtn").addEventListener("click", () => {
+    const popup = document.getElementById("popup");
+    if (popup) {
+        popup.style.display = "none";  // cache au lieu de remove()
+    }
+});
+</script>
         </div>
         """,
         unsafe_allow_html=True
@@ -454,7 +462,7 @@ components.html(
     let timer;
     function resetTimer() {
         clearTimeout(timer);
-        timer = setTimeout(showPopup, 30000); // 30s
+        timer = setTimeout(showPopup, 30000); // 120s
     }
     function showPopup() {
         const btns = window.parent.document.querySelectorAll('button');

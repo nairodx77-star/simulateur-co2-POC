@@ -418,9 +418,9 @@ if st.button("ℹ️ Plus d'information sur cette initiative"):
 
 # Gestion du popup
 if st.session_state.get("show_popup", False):
-st.markdown(
-    f"""
-    <div id="popup" style="
+    st.markdown(
+        f"""
+        <div id="popup" style="
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
         padding: 25px; z-index: 9999; width: 420px; text-align:center;

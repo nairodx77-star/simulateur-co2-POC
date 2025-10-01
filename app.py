@@ -431,8 +431,9 @@ def load_image_base64(path):
 img_b64 = load_image_base64("dorian.png")
 if st.session_state.get("show_popup", False):
     st.markdown(
-        f"""
-        <div id="popup" style="
+       st.markdown(
+    f"""
+    <div id="popup" style="
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
         padding: 25px; z-index: 9999; width: 420px; text-align:center;

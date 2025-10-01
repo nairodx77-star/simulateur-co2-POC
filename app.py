@@ -304,39 +304,63 @@ if sol_init and sol_final:
         f"ou {eq['pny_AR']} A/R Paris–New York."
     )
 
-    # HERO – Gain CO2
-    st.markdown(f'<div class="gain-hero">🌿 Gain CO₂ : {gain_co2:.2f} t/an<small>(Émissions AVANT − APRÈS)</small></div>', unsafe_allow_html=True)
+       # HERO – Gain CO2 (d'abord, pour être visible)
+    st.markdown(
+        f'<div class="gain-hero">🌿 Gain CO₂ : {gain_co2:.2f} t/an'
+        f'<small>(Émissions AVANT − APRÈS)</small></div>', unsafe_allow_html=True
+    )
 
-    # Résultats
-    st.subheader("📊 Résultats détaillés")
-    m1, m2, m3 = st.columns(3)
-    m1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
-    m2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
-    m3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
+    # ==============================
+    # ÉQUIVALENCES CO₂ – Voiture / Avion
+    # ==============================
+    EF_CAR_KG_PER_KM = 0.15      # 150 gCO₂/km (modifiable)
+    PNY_AR_TONNES    = 1.65      # 1 A/R Paris–New York (éco) ~1.65 tCO₂ (modifiable)
+    PARIS_LYON_AR_KM = 950       # A/R Paris–Lyon ~950 km
 
-    # Graphique Altair à gauche (Avant rouge clair, Après vert)
-    df_chart = pd.DataFrame({"Phase": ["Avant", "Après"], "tCO₂/an": [emissions_avant, emissions_apres]})
-    chart = alt.Chart(df_chart).mark_bar().encode(
-        x=alt.X("Phase", sort=["Avant", "Après"], axis=alt.Axis(title=None)),
-        y=alt.Y("tCO₂/an", axis=alt.Axis(title="tCO₂/an")),
-        color=alt.condition(alt.datum.Phase == "Avant", alt.value("#FF9999"), alt.value("#71A950"))
-    ).properties(height=600, width=150)
+    def _car_km_from_tonnes(t): return (t * 1000.0) / EF_CAR_KG_PER_KM
+    def _flights_from_tonnes(t, flight_t=PNY_AR_TONNES): return t / flight_t
 
-    col_graph, _ = st.columns([1, 3])  # graphe à gauche
-    with col_graph:
-        st.altair_chart(chart, use_container_width=False)
-    # Export CSV
-    st.subheader("⬇️ Export des résultats")
-    data = {
-      "Bâtiment": bat, "Solution AVANT": sol_init, "Solution APRÈS": sol_final,
-      "Conso AVANT (kWh PCI/an)": conso, "% Gaz vert": gaz_vert,
-      "Hybride": hybride, "Part Elec (%)": part_elec, "Part Gaz (%)": part_gaz,
-      "Gain énergétique utilisé": gain_ener, "Conso AVANT (MWh/an)": conso_avant_mwh,
-      "Conso APRÈS (MWh/an)": conso_apres_mwh, "Émissions AVANT (tCO₂/an)": emissions_avant,
-      "Émissions APRÈS (tCO₂/an)": emissions_apres, "Gain CO₂ (tCO₂/an)": gain_co2
-    }
-    csv = StringIO(); pd.DataFrame([data]).to_csv(csv, index=False)
-    st.download_button("Télécharger le CSV", data=csv.getvalue(), file_name="simulation_CO2.csv", mime="text/csv")
+    # On communique sur la magnitude (valeur absolue) mais on garde le signe pour l'énoncé
+    _sign = "économie" if gain_co2 >= 0 else "surémission"
+    _mag  = abs(gain_co2)
+
+    # Table ~30 paliers (0,5 ; 1 ; 2 ; … ; 30) + 15/25
+    PALIER_T = sorted({0.5, *range(1, 31), 15, 25})
+    equivalences = []
+    for t in PALIER_T:
+        km = _car_km_from_tonnes(t)
+        vols = _flights_from_tonnes(t)
+        equivalences.append({
+            "gain_t": t,
+            "car_km": round(km),
+            "car_paris_lyon_AR": round(km / PARIS_LYON_AR_KM, 2),
+            "pny_AR": round(vols, 2)
+        })
+    def _nearest_equivalence(t): return min(equivalences, key=lambda e: abs(e["gain_t"] - t))
+
+    st.subheader("🌍 Équivalences parlantes")
+
+    if _mag < PNY_AR_TONNES:
+        km_eq = _car_km_from_tonnes(_mag)
+        paris_lyon_eq = km_eq / PARIS_LYON_AR_KM
+        st.write(
+            f"• Votre **{_sign}** de **{abs(gain_co2):.2f} tCO₂** "
+            f"équivaut à **~{km_eq:,.0f} km** en voiture "
+            f"(≈ **{paris_lyon_eq:.2f}** A/R Paris–Lyon)."
+        )
+    else:
+        n_vols = _flights_from_tonnes(_mag)
+        st.write(
+            f"• Votre **{_sign}** de **{abs(gain_co2):.2f} tCO₂** "
+            f"équivaut à **~{n_vols:.2f} A/R Paris–New York (classe éco)**."
+        )
+
+    eq = _nearest_equivalence(_mag)
+    st.caption(
+        f"Palier le plus proche (**{eq['gain_t']} t**) : "
+        f"~{eq['car_km']:,} km en voiture (≈ {eq['car_paris_lyon_AR']} A/R Paris–Lyon) "
+        f"ou {eq['pny_AR']} A/R Paris–New York."
+    )
 
 # ==============================
 # ⚙️ Administration (bas gauche)

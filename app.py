@@ -7,7 +7,7 @@ import altair as alt
 # ==============================
 # THEME / CONFIG
 # ==============================
-st.set_page_config(page_title="Simulateur GRDF CO₂", layout="wide")
+st.set_page_config(page_title="Simulateur CO₂ expérimentation IA", layout="wide")
 GRDF_BLUE = "#004595"; GRDF_TEAL = "#06A8A5"; GRDF_GREEN = "#71A950"; GRDF_YELLOW = "#F5A803"; GRDF_GREY = "#87929A"
 
 st.markdown(f"""

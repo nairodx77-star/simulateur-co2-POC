@@ -461,6 +461,24 @@ if st.session_state.get("show_popup", False):
         }}
     }});
     </script>
+    <script>
+    // Fermeture automatique après 10s d'inactivité
+    let inactivityTimer;
+    function closePopup() {
+        var popup = document.getElementById("popup");
+        if (popup) {
+            popup.style.display = "none";
+        }
+    }
+    function resetTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(closePopup, 10000); // 10 sec
+    }
+    window.onload = resetTimer;
+    window.onmousemove = resetTimer;
+    window.onkeydown = resetTimer;
+</script>
+
     """,
     unsafe_allow_html=True
 )

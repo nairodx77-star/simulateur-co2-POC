@@ -331,7 +331,6 @@ st.caption(
     f"(≈ {eq['car_paris_lyon_AR']} A/R Paris–Lyon) "
     f"ou {eq['pny_AR']} A/R Paris–New York."
 )
-
     # Export CSV
     st.subheader("⬇️ Export des résultats")
     data = {

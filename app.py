@@ -418,32 +418,41 @@ if st.button("ℹ️ Plus d'information sur cette initiative"):
 
 # Gestion du popup
 if st.session_state.get("show_popup", False):
-    st.markdown(
-        f"""
-        <div id="popup" style="
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
-            padding: 25px; z-index: 9999; width: 420px; text-align:center;
-            box-shadow: 0 4px 20px rgba(0,0,0,.3);
-        ">
-            <img src="dorian.png" style="width:120px; border-radius:50%; margin-bottom:15px;" />
-            <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
-            <p>Il s'agit d'une expérimentation pour prouver qu'il est possible en moins de 2H
-            de développer un outil fonctionnel grâce à Copilote en se basant uniquement sur un
-            cahier des charges.</p>
-            <p style="font-size:0.8rem; color:{GRDF_GREY};">
-            Disclaimer : le code utilisé a été généré intégralement par l'IA
-            sans aucune intervention humaine.
-            </p>
-            <button onclick="document.getElementById('popup').remove()"
-                style="margin-top:15px; padding:8px 16px; background:{GRDF_BLUE};
-                color:white; border:none; border-radius:8px; cursor:pointer;">
-                J'ai compris
-            </button>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+st.markdown(
+    f"""
+    <div id="popup" style="
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
+        padding: 25px; z-index: 9999; width: 420px; text-align:center;
+        box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    ">
+        <img src="data:image/png;base64,{img_b64}" style="width:120px; border-radius:50%; margin-bottom:15px;" />
+        <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
+        <p>Il s'agit d'une expérimentation pour développer en moins de 2H
+        un outil fonctionnel grâce à Copilote en se basant sur le
+        cahier des charges et le référentiel Excel CO₂.</p>
+        <p style="font-size:0.8rem; color:{GRDF_GREY};">
+        Disclaimer : le code utilisé a été généré intégralement par l'IA
+        sans aucune intervention humaine.
+        </p>
+        <button id="closePopupBtn"
+            style="margin-top:15px; padding:8px 16px; background:{GRDF_BLUE};
+            color:white; border:none; border-radius:8px; cursor:pointer;">
+            J'ai compris
+        </button>
+    </div>
+
+    <script>
+    document.getElementById("closePopupBtn").addEventListener("click", function() {{
+        var popup = document.getElementById("popup");
+        if (popup) {{
+            popup.style.display = "none";  // ferme le popup sans erreur Python
+        }}
+    }});
+    </script>
+    """,
+    unsafe_allow_html=True
+)
 
 # ==============================
 # SCRIPT JS POUR DÉTECTION INACTIVITÉ

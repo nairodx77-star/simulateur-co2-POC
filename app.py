@@ -242,6 +242,67 @@ if sol_init and sol_final:
         emissions_apres = conso_apres_mwh * FE_ELEC if is_pac(sol_final) else conso_apres_mwh * fe_gaz_mix
 
     gain_co2 = emissions_avant - emissions_apres
+    # ==============================
+    # ÉQUIVALENCES CO₂ – Voiture / Avion
+    # ==============================
+    EF_CAR_KG_PER_KM = 0.15        # 150 gCO₂ / km (modifiable)
+    PNY_AR_TONNES    = 1.65        # 1 A/R Paris–New York (classe éco) ~1.65 tCO₂ (modifiable)
+    PARIS_LYON_AR_KM = 950         # A/R Paris–Lyon ~950 km (repère voiture)
+
+    def _car_km_from_tonnes(t):
+        return (t * 1000.0) / EF_CAR_KG_PER_KM
+
+    def _flights_from_tonnes(t, flight_t=PNY_AR_TONNES):
+        return t / flight_t
+
+    # Table d’environ 30 paliers (0,5 ; 1 ; 2 ; … ; 30) + 15 et 25
+    PALIER_T = [0.5] + list(range(1, 31))
+    for forced in (15, 25):
+        if forced not in PALIER_T:
+            PALIER_T.append(forced)
+    PALIER_T = sorted(PALIER_T)
+
+    equivalences = []
+    for t in PALIER_T:
+        km = _car_km_from_tonnes(t)
+        vols = _flights_from_tonnes(t)
+        paris_lyon_ar = km / PARIS_LYON_AR_KM
+        equivalences.append({
+            "gain_t": t,
+            "car_km": round(km),
+            "car_paris_lyon_AR": round(paris_lyon_ar, 2),
+            "pny_AR": round(vols, 2)
+        })
+
+    def _nearest_equivalence(t):
+        return min(equivalences, key=lambda e: abs(e["gain_t"] - t))
+
+    # --- Affichage dynamique ---
+    st.subheader("🌍 Équivalences parlantes")
+
+    # Si < 1 A/R Paris–NY → on privilégie une unité voiture
+    if gain_co2 < PNY_AR_TONNES:
+        km_eq = _car_km_from_tonnes(gain_co2)
+        paris_lyon_eq = km_eq / PARIS_LYON_AR_KM
+        st.write(
+            f"• Votre économie de **{gain_co2:.2f} tCO₂** "
+            f"équivaut à **~{km_eq:,.0f} km** parcourus en voiture "
+            f"(≈ **{paris_lyon_eq:.2f}** A/R Paris–Lyon)."
+        )
+    else:
+        n_vols = _flights_from_tonnes(gain_co2)
+        st.write(
+            f"• Votre économie de **{gain_co2:.2f} tCO₂** "
+            f"équivaut à **~{n_vols:.2f} A/R Paris–New York (classe éco)**."
+        )
+
+    # Palier le plus proche (dans la table de 0,5 → 30 t + 15/25)
+    eq = _nearest_equivalence(gain_co2)
+    st.caption(
+        f"Équivalence la plus proche (palier **{eq['gain_t']} t**): "
+        f"~{eq['car_km']:,} km en voiture (≈ {eq['car_paris_lyon_AR']} A/R Paris–Lyon) "
+        f"ou {eq['pny_AR']} A/R Paris–New York."
+    )
 
     # HERO – Gain CO2
     st.markdown(f'<div class="gain-hero">🌿 Gain CO₂ : {gain_co2:.2f} t/an<small>(Émissions AVANT − APRÈS)</small></div>', unsafe_allow_html=True)

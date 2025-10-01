@@ -31,7 +31,7 @@ st.markdown("<div style='margin-top:35px;'></div>", unsafe_allow_html=True)  # e
 
 col_logo1, col_spacer, col_logo2 = st.columns([1, 5, 1])
 with col_logo1:
-    st.image("Grdf.png", width=180)   # agrandi
+    st.image("dorian.png", width=180)   # agrandi
 with col_logo2:
     st.image("Simulateur.png", width=180)  # agrandi
 

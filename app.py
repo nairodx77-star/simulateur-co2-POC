@@ -429,41 +429,57 @@ def load_image_base64(path):
         return None
 
 img_b64 = load_image_base64("dorian.png")
-if st.session_state.get("show_popup", False):
+if st.session_state.get("show_popup", False) and img_b64:
     st.markdown(
-    f"""
-    <div id="popup" style="
-        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
-        padding: 25px; z-index: 9999; width: 420px; text-align:center;
-        box-shadow: 0 4px 20px rgba(0,0,0,.3);
-    ">
-        <img src="data:image/png;base64,{img_b64}" style="width:120px; border-radius:50%; margin-bottom:15px;" />
-        <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
-        <p>Il s'agit d'une expérimentation servant à démontrer qu'il est possible de développer un outils 100% fonctionnel en moins de 2H
-        grâce à Copilote à partir d'un simple cahier des charges.</p>
-        <p style="font-size:0.8rem; color:{GRDF_GREY};">
-        Disclaimer : Dans le cadre de ce "POC" le code utilisé a été généré intégralement par l'IA
-        sans aucune intervention humaine.
-        </p>
-        <button id="closePopupBtn"
-            style="margin-top:15px; padding:8px 16px; background:{GRDF_BLUE};
-            color:white; border:none; border-radius:8px; cursor:pointer;">
-            J'ai compris
-        </button>
-    </div>
+        f"""
+        <div id="popup" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; border: 3px solid {GRDF_BLUE}; border-radius: 15px;
+            padding: 25px; z-index: 9999; width: 420px; text-align:center;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3); position:relative;
+        ">
+            <!-- Croix de fermeture -->
+            <span id="closePopupX" style="
+                position:absolute; top:8px; right:12px;
+                font-size:20px; font-weight:bold; cursor:pointer; color:{GRDF_BLUE};
+            ">&times;</span>
 
-    <script>
-    document.getElementById("closePopupBtn").addEventListener("click", function() {{
-        var popup = document.getElementById("popup");
-        if (popup) {{
-            popup.style.display = "none";  // ferme le popup sans erreur Python
+            <img src="data:image/png;base64,{img_b64}" style="width:120px; border-radius:50%; margin-bottom:15px;" />
+            <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
+            <p>Il s'agit d'une expérimentation pour développer en moins de 2H
+            un outil fonctionnel grâce à Copilote en se basant sur le
+            cahier des charges et le référentiel Excel CO₂.</p>
+            <p style="font-size:0.8rem; color:{GRDF_GREY};">
+            Disclaimer : le code utilisé a été généré intégralement par l'IA
+            sans aucune intervention humaine.
+            </p>
+
+            <!-- Bouton fermer -->
+            <button id="closePopupBtn"
+                style="margin-top:15px; padding:8px 16px; background:{GRDF_BLUE};
+                color:white; border:none; border-radius:8px; cursor:pointer;">
+                J'ai compris
+            </button>
+        </div>
+
+        <script>
+        // Fonction de fermeture générique
+        function closePopup() {{
+            var popup = document.getElementById("popup");
+            if (popup) {{
+                popup.style.display = "none";
+            }}
         }}
-    }});
-    </script>
-    """,
-    unsafe_allow_html=True
-)
+
+        // Bouton "J'ai compris"
+        document.getElementById("closePopupBtn").addEventListener("click", closePopup);
+
+        // Croix de fermeture
+        document.getElementById("closePopupX").addEventListener("click", closePopup);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ==============================
 # SCRIPT JS POUR DÉTECTION INACTIVITÉ

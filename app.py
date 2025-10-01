@@ -35,7 +35,7 @@ with col_logo1:
 with col_logo2:
     st.image("Simulateur.png", width=180)  # agrandi
 
-st.title("🔵 Simulateur Gains CO₂ – GRDF")
+st.title("🔵 Simulateur Gains CO₂ – Expérimentation IA")
 st.caption("Version JSON (sans Excel) – matrices & facteurs chargés depuis le repo, éditables en ligne.")
 
 # ==============================

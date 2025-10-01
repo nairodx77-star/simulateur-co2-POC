@@ -249,6 +249,25 @@ if sol_init and sol_final:
         f'<small>(Émissions AVANT − APRÈS)</small></div>', unsafe_allow_html=True
     )
 
+    # Résultats
+    st.subheader("📊 Résultats détaillés")
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Conso AVANT (MWh/an)", f"{conso_avant_mwh:.1f}")
+    m2.metric("Émissions AVANT (tCO₂/an)", f"{emissions_avant:.2f}")
+    m3.metric("Émissions APRÈS (tCO₂/an)", f"{emissions_apres:.2f}")
+
+    # Graphique Altair à gauche (Avant rouge clair, Après vert)
+    df_chart = pd.DataFrame({"Phase": ["Avant", "Après"], "tCO₂/an": [emissions_avant, emissions_apres]})
+    chart = alt.Chart(df_chart).mark_bar().encode(
+        x=alt.X("Phase", sort=["Avant", "Après"], axis=alt.Axis(title=None)),
+        y=alt.Y("tCO₂/an", axis=alt.Axis(title="tCO₂/an")),
+        color=alt.condition(alt.datum.Phase == "Avant", alt.value("#FF9999"), alt.value("#71A950"))
+    ).properties(height=600, width=150)
+
+    col_graph, _ = st.columns([1, 3])  # graphe à gauche
+    with col_graph:
+        st.altair_chart(chart, use_container_width=False)
+
     # ==============================
     # ÉQUIVALENCES CO₂ – Voiture / Avion
     # ==============================
@@ -409,9 +428,9 @@ if st.session_state.get("show_popup", False):
         ">
             <img src="dorian.png" style="width:120px; border-radius:50%; margin-bottom:15px;" />
             <h3 style="color:{GRDF_GREEN};">Merci d'avoir utilisé le simulateur CO₂</h3>
-            <p>Il s'agit d'une expérimentation pour développer en moins de 2H
-            un outil fonctionnel grâce à Copilote en se basant sur le
-            cahier des charges et le référentiel Excel CO₂.</p>
+            <p>Il s'agit d'une expérimentation pour prouver qu'il est possible en moins de 2H
+            de développer un outil fonctionnel grâce à Copilote en se basant uniquement sur un
+            cahier des charges.</p>
             <p style="font-size:0.8rem; color:{GRDF_GREY};">
             Disclaimer : le code utilisé a été généré intégralement par l'IA
             sans aucune intervention humaine.

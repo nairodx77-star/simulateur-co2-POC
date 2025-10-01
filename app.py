@@ -417,6 +417,18 @@ if st.button("ℹ️ Plus d'information sur cette initiative"):
     st.session_state["show_popup"] = True
 
 # Gestion du popup
+import base64
+
+def load_image_base64(path):
+    try:
+        with open(path, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except Exception as e:
+        st.error(f"Impossible de charger {path} : {e}")
+        return None
+
+img_b64 = load_image_base64("dorian.png")
 if st.session_state.get("show_popup", False):
     st.markdown(
         f"""

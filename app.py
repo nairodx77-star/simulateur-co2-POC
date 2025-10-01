@@ -431,7 +431,6 @@ def load_image_base64(path):
 img_b64 = load_image_base64("dorian.png")
 if st.session_state.get("show_popup", False):
     st.markdown(
-       st.markdown(
     f"""
     <div id="popup" style="
         position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);

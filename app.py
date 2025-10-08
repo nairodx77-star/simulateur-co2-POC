@@ -464,30 +464,3 @@ if st.session_state.get("show_popup", False):
     """,
     unsafe_allow_html=True
 )
-
-# ==============================
-# SCRIPT JS POUR DÉTECTION INACTIVITÉ
-# ==============================
-components.html(
-    """
-    <script>
-    let timer;
-    function resetTimer() {
-        clearTimeout(timer);
-        timer = setTimeout(showPopup, 30000); // 4200s
-    }
-    function showPopup() {
-        const btns = window.parent.document.querySelectorAll('button');
-        btns.forEach(b => {
-            if (b.innerText.includes("Plus d'information sur cette initiative")) {
-                b.click();
-            }
-        });
-    }
-    window.onload = resetTimer;
-    window.onmousemove = resetTimer;
-    window.onkeydown = resetTimer;
-    </script>
-    """,
-    height=0,
-)

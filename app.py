@@ -474,7 +474,7 @@ components.html(
     let timer;
     function resetTimer() {
         clearTimeout(timer);
-        timer = setTimeout(showPopup, 30000); // 420s
+        timer = setTimeout(showPopup, 30000); // 4200s
     }
     function showPopup() {
         const btns = window.parent.document.querySelectorAll('button');
